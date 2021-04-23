@@ -4,6 +4,7 @@ import { Hydrate } from 'react-query/hydration';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import { Provider } from 'next-auth/client';
 import 'tailwindcss/tailwind.css';
+import Layout from '@/components/Layout';
 
 function MyApp({ Component, pageProps }) {
   const queryClientRef = React.useRef<any>();
@@ -15,7 +16,9 @@ function MyApp({ Component, pageProps }) {
     <QueryClientProvider client={queryClientRef.current}>
       <Hydrate state={pageProps.dehydratedState}>
         <Provider session={pageProps.session}>
-          <Component {...pageProps} />
+          <Layout>
+            <Component {...pageProps} />
+          </Layout>
         </Provider>
       </Hydrate>
       <ReactQueryDevtools />
