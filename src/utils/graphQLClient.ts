@@ -1,6 +1,6 @@
 import { GraphQLClient } from 'graphql-request';
 
-const endpoint = 'http://localhost:3334/graphql';
+const endpoint = 'http://localhost:3333/graphql';
 
 const client = (token?: string) =>
   token

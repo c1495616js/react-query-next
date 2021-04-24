@@ -16,6 +16,13 @@
 
 visit the client at `http://localhost:3000`
 
+**_.ENV_**
+
+- add `.env.local` in root folder with
+
+```
+NEXTAUTH_URL=http://localhost:3000
+```
 
 **_NPM:_**
 
