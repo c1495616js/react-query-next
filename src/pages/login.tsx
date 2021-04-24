@@ -2,10 +2,14 @@ import React from 'react';
 import { signIn } from 'next-auth/client';
 
 const Login: React.FC = () => {
+  const [email, setEmail] = React.useState('');
+  const [password, setPassword] = React.useState('');
+
   const handleLogin = async () => {
+    console.log(email);
     await signIn('credentials', {
-      email: 'leo@me.com',
-      password: 'password',
+      email,
+      password,
       callbackUrl: `/post`,
     });
   };
@@ -25,6 +29,7 @@ const Login: React.FC = () => {
                 id="email"
                 placeholder="Email"
                 aria-label="email"
+                onChange={(e) => setEmail(e.target.value)}
                 required
               />
             </div>
@@ -36,28 +41,18 @@ const Login: React.FC = () => {
                 id="password"
                 placeholder="Password"
                 arial-label="password"
+                onChange={(e) => setPassword(e.target.value)}
                 required
               />
             </div>
-            <div className="mt-4 items-center flex justify-between">
+            <div className="mt-4 items-center flex justify-center">
               <button
                 className="px-4 py-1 text-white font-light tracking-wider bg-gray-900 hover:bg-gray-800 rounded"
                 type="button"
                 onClick={handleLogin}
               >
-                Enter
+                Login
               </button>
-              <a
-                className="inline-block right-0 align-baseline font-bold text-sm text-500 text-white hover:text-red-400"
-                href="#"
-              >
-                Forget Password ?
-              </a>
-            </div>
-            <div className="text-center">
-              <a className="inline-block right-0 align-baseline font-light text-sm text-500 hover:text-red-400">
-                Create An Account
-              </a>
             </div>
           </form>
         </div>

@@ -1,13 +1,15 @@
 import NextAuth, { User } from 'next-auth';
 import Providers from 'next-auth/providers';
 import { NextApiRequest, NextApiResponse } from 'next';
-import { request, gql } from 'graphql-request';
+import { gql } from 'graphql-request';
+
+import graphqlClient from 'src/utils/graphQLClient';
 
 type Token = {
   token: string;
 };
 
-const endpoint = 'http://localhost:3333/graphql';
+const endpoint = 'http://localhost:3334/graphql';
 
 const options = {
   // @link https://next-auth.js.org/configuration/providers
@@ -18,19 +20,17 @@ const options = {
         email: { label: 'Email', type: 'email' },
         password: { label: 'Password', type: 'password' },
       },
-      authorize: async (credentials) => {
-        // const { email, password } = credentials;
-        console.log(request);
+      authorize: async (credentials: { email: string; password: string }) => {
+        const { email, password } = credentials;
         /**
          * handling normal login with email and password
          */
-        if (true) {
+        if (email && password) {
           try {
-            const { signin: data } = await request(
-              endpoint,
+            const { signin: data } = await graphqlClient().request(
               gql`
-                mutation signIn {
-                  signin(signinInput: { email: "leo@me.com", password: "password" }) {
+                mutation signIn($email: String!, $password: String!) {
+                  signin(signinInput: { email: $email, password: $password }) {
                     token
                     user {
                       id
@@ -38,13 +38,12 @@ const options = {
                     }
                   }
                 }
-              `
+              `,
+              { email, password }
             );
-            console.log('data:', data);
-            const { token, user } = data;
             return Promise.resolve(data);
           } catch (error) {
-            console.log(error, 'err---');
+            console.log('Error:', error);
             return Promise.reject(new Error('Login Error'));
           }
         }
@@ -106,7 +105,6 @@ const options = {
      * @return {object}              Session that will be returned to the client
      **/
     session: async (user: any, token: Token) => {
-      console.log(user, token);
       return Promise.resolve(token ? { ...token, ...user } : user);
     },
 
@@ -120,7 +118,6 @@ const options = {
      * @return {object}            JSON Web Token that will be saved
      */
     jwt: async (user: User, token: Token) => {
-      console.log(user, token);
       return Promise.resolve(token ? { ...token, ...user } : user);
     },
   },
