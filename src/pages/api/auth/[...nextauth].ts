@@ -9,8 +9,6 @@ type Token = {
   token: string;
 };
 
-const endpoint = 'http://localhost:3334/graphql';
-
 const options = {
   // @link https://next-auth.js.org/configuration/providers
   providers: [
